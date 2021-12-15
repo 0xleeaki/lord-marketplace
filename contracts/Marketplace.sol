@@ -188,7 +188,9 @@ contract Marketplace is Context, Ownable, Initializable, IERC721Receiver {
         uint256 _duration
     ) external {
         _requireERC721(_tokenAddress);
-        require(_startTime >= block.timestamp, "Required start time larger than current time");
+        if(_startTime < block.timestamp) {
+            _startTime = block.timestamp;
+        }
         require(_duration >= MIN_AUCTION_DURATION, "The auction should be last longer than a min auction duration");
         require(_duration <= MAX_AUCTION_DURATION, "The auction can not last longer than max auction duration");
         require(!auctions[_tokenAddress][_tokenId].isListing, "Auction already exists");
